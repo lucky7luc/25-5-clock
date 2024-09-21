@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Redux from 'redux';
+//import Redux from 'redux';
 import {Provider, connect} from 'react-redux';
 import './App.css';
 import { configureStore } from '@reduxjs/toolkit';
@@ -115,24 +115,77 @@ class Timer extends Component{
   constructor(props){
     super(props);
     this.state = {
-      currentTime: 25,
-      startStopBtn: false,
-      resetBtn: false
+      currentTime: '25 : 00',
+      timerStarted: false,
+      timerInterval: null
     }
     this.reset = this.reset.bind(this);
+    this.startOrStopTimer = this.startOrStopTimer.bind(this);
   }
 
   reset(){
     this.props.resetActionCall();
+    if(this.state.timerInterval){
+      clearInterval(this.state.timerInterval)
+    }
+    this.setState({
+      currentTime: '25 : 00',
+      timerStarted: false,
+      timerInterval: null
+    });
+  }
+
+  startOrStopTimer(){
+    let alarm = new Audio('alarm.mp3');
+
+    if(!this.state.timerStarted){
+      let startTime = new Date().getTime();
+      let sessionTime = this.props.session * 1000 * 60;
+      let endtime = startTime + sessionTime;
+
+      const timerInterval = setInterval(() => {
+        let timeLeft = endtime - new Date().getTime();
+
+        if(timeLeft > 0){
+          let minutes = Math.floor(timeLeft / (1000 * 60));
+          let seconds = Math.round((timeLeft / 1000) % 60);
+          seconds = ('0' + seconds).slice(-2);
+          let text = ('0' + minutes).slice(-2) + ' : ' + seconds;
+
+          this.setState({
+            currentTime: text
+          });
+        } else {
+          clearInterval(this.state.timerInterval);
+          alarm.play();
+          this.setState({
+            currentTime: '00 : 00',
+            timerStarted: false,
+            timerInterval: null
+          });
+        }
+      }, 1000);
+
+      this.setState({
+        timerStarted: true,
+        timerInterval: timerInterval
+      });
+    } else {
+      clearInterval(this.state.timerInterval);
+      this.setState({
+        timerStarted: false,
+        timerInterval: null
+      });
+    }
   }
   
   render(){
     return (
       <div className="App">
        <span id="timer-label">Session</span>
-       <div id="time-left">{this.props.currentTime}</div>
-       <button id="start_stop">x</button>
-       <button id="reset" onClick={this.reset}>o</button>
+       <div id="time-left">{this.state.currentTime}</div>
+       <button id="start_stop" onClick={this.startOrStopTimer}>start/stop</button>
+       <button id="reset" onClick={this.reset}>reset</button>
       </div>
     );
   }
