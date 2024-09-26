@@ -1,38 +1,73 @@
-.App {
+body{
+  background-color: rgb(53, 112, 92);
+  color: rgb(242, 242, 243);
+}
+
+.timer {
   text-align: center;
+  border: solid 4px rgba(0, 0, 0, 0.604);
+  margin: 0 15vw;
+  padding: 10px;
+  border-radius: 15px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.break-session-length {
+  text-align: center;
+  margin: 50px;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.break-container {
+  position: relative;
+  top: 5.3em;
+  right: 7em;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.session-container {
+  position: relative;
+  bottom: 4em;
+  left: 7em;
 }
 
-.App-link {
-  color: #61dafb;
+#break-label {
+  font-size: 1.2rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#break-length{
+  padding: 5px;
+  font-size: 1.2rem;
+}
+
+#session-label {
+  font-size: 1.2rem;
+}
+
+#session-length{
+  padding: 5px;
+  font-size: 1.2rem;
+}
+
+#timer-label {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#time-left {
+  font-size: 3rem;
+  padding: 10px;
+  font-weight: bold;
+}
+
+button {
+  cursor: pointer;
+  background-color:  rgb(53, 112, 92);
+  color: rgb(242, 242, 243);
+  border: none;
+  margin: 2px;
+  font-size: 1rem;
+}
+
+button:hover {
+  color: rgba(0, 0, 0, 0.569);
 }
