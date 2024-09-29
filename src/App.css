@@ -1,33 +1,29 @@
 body{
+  text-align: center;
   background-color: rgb(53, 112, 92);
   color: rgb(242, 242, 243);
 }
 
+h1 {
+  font-size: 2.5rem;
+  margin-top: 10vh;
+}
+
 .timer {
-  text-align: center;
   border: solid 4px rgba(0, 0, 0, 0.604);
-  margin: 0 15vw;
+  margin: 10vh 15vw;
   padding: 10px;
   border-radius: 15px;
 }
 
-.break-session-length {
-  text-align: center;
-  margin: 50px;
+.lengths {
   padding: 10px;
-  border-radius: 5px;
 }
 
-.break-container {
-  position: relative;
-  top: 5.3em;
-  right: 7em;
-}
-
-.session-container {
-  position: relative;
-  bottom: 4em;
-  left: 7em;
+.break-session-container {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 7em;
 }
 
 #break-label {

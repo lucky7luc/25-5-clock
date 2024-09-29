@@ -1,156 +1,142 @@
-import React, {Component} from 'react';
-import {Provider, connect} from 'react-redux';
 import './App.css';
+import React, {Component} from 'react';
 import { configureStore } from '@reduxjs/toolkit';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import { Provider, connect } from 'react-redux';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
-
-// Redux
-const DEC_BREAK = "DEC_BREAK";
-const INC_BREAK = "INC_BREAK";
-const DEC_SESSION = "DEC_SESSION";
-const INC_SESSION = "INC_SESSION";
-const CHANGE_MODE = "CHANGE_MODE";
-const RESET = "RESET";
-
+//Redux
 const defaultState = {
   break: 5,
   session: 25,
-  sessionMode: true
+  sessionMode: true,
 };
+
+const INC_BREAK = "INC_BREAK";
+const DEC_BREAK = "DEC_BREAK";
+const INC_SESSION = "INC_SESSION";
+const DEC_SESSION = "DEC_SESSION";
+const CHANGE_MODE = "CHANGE_MODE";
+const RESET = "RESET";
 
 const reducer = (state = defaultState, action) => {
   switch(action.type){
-      case DEC_BREAK:
-        return { 
-          ...state,
-          break: state.break - 1
-        };
-      case INC_BREAK:
-        return { 
-          ...state,
-          break: state.break + 1
-        };
-      case DEC_SESSION:
-        return { 
-          ...state,
-          session: state.session - 1
-        };        
-      case INC_SESSION:
-          return { 
-            ...state,
-            session: state.session + 1
-        };
-      case CHANGE_MODE:
-        return {
-          ...state,
-          sessionMode: !state.sessionMode
-        };  
-      case RESET:
-        return {
-          ...defaultState
-        };
-      default:
-        return state
+    case INC_BREAK:
+      return {
+        ...state,
+        break: state.break < 60 ? state.break + 1 : state.break};
+    case DEC_BREAK:
+      return {
+        ...state,
+        break: state.break > 1 ? state.break - 1 : state.break};
+    case INC_SESSION:
+      return {
+        ...state,
+        session: state.session < 60 ? state.session + 1 : state.session};
+    case DEC_SESSION:
+      return {
+        ...state,
+        session: state.session > 1 ? state.session - 1 : state.session};
+    case CHANGE_MODE:
+      return {
+        ...state,
+        sessionMode: !state.sessionMode};
+    case RESET:
+      return {
+        ...defaultState};
+    default:
+      return state
   };
-}
+};
 
 const store = configureStore({ reducer });
 
-const decBreakAction = () => ({type: DEC_BREAK});
 const incBreakAction = () => ({type: INC_BREAK});
-const decSessionAction = () => ({type: DEC_SESSION});
+const decBreakAction = () => ({type: DEC_BREAK});
 const incSessionAction = () => ({type: INC_SESSION});
+const decSessionAction = () => ({type: DEC_SESSION});
 const changeModeAction = () => ({type: CHANGE_MODE});
 const resetAction = () => ({type: RESET});
 
 
-// React
-class Break extends Component{
+//React
+
+class Break extends Component {
   constructor(props){
     super(props);
-    this.breakDecrement = this.breakDecrement.bind(this);
-    this.breakIncrement = this.breakIncrement.bind(this);
-  }
+    this.incBreak = this.incBreak.bind(this);
+    this.decBreak = this.decBreak.bind(this);
+  };
 
-  breakDecrement(){
-    if(this.props.break > 1){
-    this.props.decBreakActionCall();
-    }
-  }
+  incBreak(){
+    if (this.props.break < 60 ) {
+    this.props.incBreakActionCall(); };
+  };
 
-  breakIncrement(){
-    if(this.props.break < 60){
-    this.props.incBreakActionCall();
-    }
-  }
+  decBreak(){
+    if (this.props.break > 1 ) {
+    this.props.decBreakActionCall(); };
+  };
 
-  render(){
-    return (
-      <div className="break-session-length">
-        <div className="break-container">
-       <span id="break-label">Break Length</span>
-       <div id="break-length">{this.props.break}</div>
-        <button id="break-decrement" onClick={this.breakDecrement}><i class="fas fa-chevron-down"></i>
-</button>
-        <button id="break-increment" onClick={this.breakIncrement}><i class="fas fa-chevron-up"></i>
-</button>
-        </div>
+  render() {    
+    return(
+      <div className='lenghts'>
+        <h3 id='break-label'>Break Length</h3>
+        <button id='break-decrement' onClick={this.decBreak}><i className='bi bi-chevron-down'></i></button>
+        <span id='break-length'>{this.props.break}</span>
+        <button id='break-increment' onClick={this.incBreak}><i className='bi bi-chevron-up'></i></button>
       </div>
     );
-  }
-}
+  };
+};
 
-class Session extends Component{
+class Session extends Component {
   constructor(props){
     super(props);
-    this.sessionDecrement = this.sessionDecrement.bind(this);
-    this.sessionIncrement = this.sessionIncrement.bind(this);
-  }
+    this.incSession = this.incSession.bind(this);
+    this.decSession = this.decSession.bind(this);
+  };
 
-  sessionDecrement(){
-    if(this.props.session > 1){
-    this.props.decSessionActionCall();
-    }
-  }
+  incSession(){
+    if (this.props.session < 60 ) {
+    this.props.incSessionActionCall();};
+  };
 
-  sessionIncrement(){
-    if(this.props.session < 60){
-    this.props.incSessionActionCall();
-    } 
-  }
+  decSession(){
+    if (this.props.session > 1 ) {
+    this.props.decSessionActionCall();};
+  };
 
-  render(){
-    return (
-      <div className="break-session-length">
-        <div className="session-container">
-       <span id="session-label">Session Length</span>
-       <div id="session-length">{this.props.session}</div>
-       <button id="session-decrement" onClick={this.sessionDecrement}><i class="fas fa-chevron-down"></i>
-</button>
-       <button id="session-increment" onClick={this.sessionIncrement}><i class="fas fa-chevron-up"></i>
-</button>
-       </div>
+  render() {    
+    return(
+      <div className='lenghts'>
+        <h3 id='session-label'>Session Length</h3>
+        <button id='session-decrement' onClick={this.decSession}><i className='bi bi-chevron-down'></i></button>
+        <span id='session-length'>{this.props.session}</span>
+        <button id='session-increment' onClick={this.incSession}><i className='bi bi-chevron-up'></i></button>
       </div>
     );
-  }
-}
+  };
+};
 
-class Timer extends Component{
+class Timer extends Component {
   constructor(props){
     super(props);
     this.state = {
-      currentTime: `${this.props.session} : 00`,
-      timerStarted: false,
-      timerInterval: null,
       mode: this.props.sessionMode ? "Session" : "Break",
-    }
+      currentTime: `${this.props.session}:00`,
+      timerInterval: null,
+      timerIsRunning: false,
+      count: 1
+    };
+
     this.reset = this.reset.bind(this);
-    this.startOrStopTimer = this.startOrStopTimer.bind(this);
+    this.startOrStop = this.startOrStop.bind(this);
     this.updateState = this.updateState.bind(this);
-    this.handleTimerEnd = this.handleTimerEnd.bind(this);
-  }
+    this.switchMode = this.switchMode.bind(this);
+    this.playAlarm = this.playAlarm.bind(this);
+    this.runTimer = this.runTimer.bind(this);
+   // this.disableButtons = this.disableButtons.bind(this);
+  };
 
   componentDidMount() {
     this.unsubscribe = store.subscribe(this.updateState);
@@ -158,150 +144,184 @@ class Timer extends Component{
 
   componentWillUnmount() {
     this.unsubscribe();
+    clearInterval(this.state.timerInterval);
   }
 
   updateState() {
     const state = store.getState();
     const mode = state.sessionMode ? "Session" : "Break";
     const time = state.sessionMode ? state.session : state.break;
+    const formattedTime = ('0' + time).slice(-2)
     this.setState({
       mode: mode,
-      currentTime: `${time} : 00`
+      currentTime: `${formattedTime}:00`
     });
-  }
+  } 
 
   reset(){
-    this.props.resetActionCall();
-    if(this.state.timerInterval){
-      clearInterval(this.state.timerInterval)
-    }
-    this.setState({
-      timerStarted: false,
-      timerInterval: null,
-      mode: "Session"
-    });
-  }
-
-  handleTimerEnd(){
-    //let alarm = new Audio('alarm.mp3');
-    //alarm.play();
-    console.log("helloo");
-
     clearInterval(this.state.timerInterval);
+    this.props.resetActionCall();
+    setTimeout(()=>{
     this.setState({
-      timerStarted: false,
+      mode: this.props.sessionMode ? "Session" : "Break",
+      timerIsRunning: false,
       timerInterval: null,
+      count: 1
+    });}, 0)
+    const audio = document.getElementById("beep");
+    audio.currentTime = 0;
+    audio.pause();
+  };
+
+  switchMode() {
+    clearInterval(this.state.timerInterval);
+    this.props.changeModeActionCall();  
+    
+    setTimeout(() => {
+    const state = store.getState();
+    const newMode = state.sessionMode ? "Session" : "Break";
+    const time = state.sessionMode ? state.session : state.break;
+    const formattedTime = ('0' + time).slice(-2);
+
+    this.setState({
+      mode: newMode,
+      currentTime: `${formattedTime}:00`,
+      count: 1,
     });
 
-    if (this.props.sessionMode) {      
-      this.props.changeModeActionCall();  // Wechsel zum Break-Modus
-      this.setState({
-        mode: "Break",
-        currentTime: `${this.props.break} : 00`,
-        timerStarted: false,
-      });
-      this.startOrStopTimer();  // Startet den Break-Timer
-    } else {
-      this.reset();  // Reset nach Beendigung des Breaks
-      this.startOrStopTimer();
-    }
+    this.runTimer();
+  }, 0);
+  };
+
+  playAlarm(){
+    const audio = document.getElementById("beep");
+    audio.currentTime = 0;
+    audio.play().catch((e)=> {
+      console.log("Error playing audio: " + e);
+    });
+    setTimeout(() =>{
+      audio.currentTime = 0;
+      audio.pause();
+    }, 3000)
   }
 
-  startOrStopTimer(){
 
-    if(!this.state.timerStarted){
-      let startTime = new Date().getTime();
-      let sessionTime = this.props.session * 1000 * 60;
-      let endtime = startTime + sessionTime;
+  runTimer() {
+    if(this.state.timerInterval !== null) {
+      clearInterval(this.state.timerInterval);
+    }
 
-      const timerInterval = setInterval(() => {
-        let timeLeft = endtime - new Date().getTime();
+    let [minutes, seconds] = this.state.currentTime.split(":").map(Number);
+    let totMiliseconds = (minutes * 60 + seconds) * 1000;
 
-        console.log(timeLeft);
+    const timeInterval = setInterval(() => {
+        let timeLeft = totMiliseconds - (1000 * this.state.count);
+      if (timeLeft >= 0) {
+        let newMinutes = Math.floor(timeLeft/(1000 *60));
+        let formattedMinutes = ('0' + newMinutes).slice(-2);
+        let newSeconds = Math.floor((timeLeft/1000) % 60);
+        let formattedSeconds = ('0' + newSeconds).slice(-2);
 
-        if(timeLeft > 0){
-          let minutes = Math.floor(timeLeft / (1000 * 60));
-          let seconds = Math.round((timeLeft / 1000) % 60);
-          let text = ('0' + minutes).slice(-2) + ' : ' + ('0' + seconds).slice(-2);
+        let text = `${formattedMinutes}:${formattedSeconds}`;
 
-          this.setState({
-            currentTime: text,
-          });
-        } 
-      }, 1000);
+        this.setState((prevState)=>({
+         currentTime: text,
+         count: prevState.count +1,
+        }));
+      } else {
+        this.playAlarm();
+        clearInterval(this.state.timerInterval); 
+        this.switchMode();
+      }
+    }, 1000);
 
-      this.handleTimerEnd();
+    this.setState({
+      timerInterval: timeInterval
+    });
+  };
 
+  //disables Buttons, when the timer is running, not activated due to FCC test errors
+  /*disableButtons(){
+    if(!this.state.timerIsRunning){
+      document.getElementById("break-decrement").disabled = true;
+      document.getElementById("break-increment").disabled = true;
+      document.getElementById("session-decrement").disabled = true;
+      document.getElementById("session-increment").disabled = true;
+    } else {
+      document.getElementById("break-decrement").disabled = false;
+      document.getElementById("break-increment").disabled = false;
+      document.getElementById("session-decrement").disabled = false;
+      document.getElementById("session-increment").disabled = false;
+    }
+  }*/
+
+  startOrStop(){
+   // this.disableButtons();
+    if(!this.state.timerIsRunning){
+      this.runTimer();
       this.setState({
-        timerStarted: true,
-        timerInterval: timerInterval
-      });
+        timerIsRunning: true,
+        count: 1,
+      });       
     } else {
       clearInterval(this.state.timerInterval);
       this.setState({
-        timerStarted: false,
-        timerInterval: null
-      });
+        timerIsRunning: false,
+        timerInterval: null,
+        count: 1,
+      })
     }
-
   }
-  
-  render(){
-    return (
-      <div className="timer">
-       <span id="timer-label">{this.state.mode}</span>
-       <div id="time-left">{this.state.currentTime}</div>
-       <button id="start_stop" onClick={this.startOrStopTimer}><i class="bi bi-play-fill"></i>
-/<i class="bi bi-stop-fill"></i>
-</button>
-       <button id="reset" onClick={this.reset}><i class="bi bi-arrow-clockwise"></i>
-</button>
+
+  render() {
+    return(
+      <div className='timer'>
+        <h2 id='timer-label'>{this.state.mode}</h2>
+        <div id="time-left">{this.state.currentTime}</div>
+        <button id='start_stop' onClick={this.startOrStop}>{this.state.timerIsRunning ? (<i className='bi bi-pause-fill'></i>) : (<i className='bi bi-play-fill'></i>)}</button>
+        <button id='reset' onClick={this.reset}><i className='bi bi-arrow-counterclockwise'></i></button>
+        <audio id='beep' src='https://cdn.freecodecamp.org/testable-projects-fcc/audio/BeepSound.wav' ></audio>
       </div>
     );
-  }
-}
+  };
+};
 
+//React Redux
 
-// React-Redux
-const mapStateToProps = (state) => {
-  return {
-    break: state.break,
-    session: state.session,
-    sessionMode: state.sessionMode
-  }
-}
+const mapStateToProps = (state) => ({
+  break: state.break,
+  session: state.session,
+  sessionMode: state.sessionMode,
+});
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    decBreakActionCall: function(){dispatch(decBreakAction())},
     incBreakActionCall: function(){dispatch(incBreakAction())},
-    decSessionActionCall: function(){dispatch(decSessionAction())},
+    decBreakActionCall: function(){dispatch(decBreakAction())},
     incSessionActionCall: function(){dispatch(incSessionAction())},
+    decSessionActionCall: function(){dispatch(decSessionAction())},
     changeModeActionCall: function(){dispatch(changeModeAction())},
-    resetActionCall: function(){dispatch(resetAction())}
-    }
-  }
+    resetActionCall: function(){dispatch(resetAction())},
+  };
+};
 
-
-const ConnectedBreak = connect(mapStateToProps, mapDispatchToProps)(Break);
-const ConnectedSession = connect(mapStateToProps, mapDispatchToProps)(Session);
-const ConnectedTimer = connect(mapStateToProps, mapDispatchToProps)(Timer);
+const ConnectedBreak = connect(mapStateToProps,mapDispatchToProps)(Break);
+const ConnectedSession = connect(mapStateToProps,mapDispatchToProps)(Session);
+const ConnectedTimer = connect(mapStateToProps,mapDispatchToProps)(Timer);
 
 class App extends Component{
-
-  constructor(props){
-    super(props);
-  }
-
   render(){
-  return (
-    <Provider store={store}>
-      <ConnectedBreak />
-      <ConnectedSession />
-      <ConnectedTimer />
-    </Provider>
-  );
-  }
-}
+    return (
+      <Provider store={store}>
+        <h1>25 - 5 CLOCK</h1>
+        <div className='break-session-container'>
+          <ConnectedBreak />
+          <ConnectedSession />
+        </div>
+        <ConnectedTimer />
+      </Provider>
+    );
+  };
+};
 
 export default App;
